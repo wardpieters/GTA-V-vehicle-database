@@ -9,4 +9,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class VehicleCollection extends Model
 {
     use HasFactory, SoftDeletes;
+
+    public function vehicles()
+    {
+        return $this->hasMany(Vehicle::class);
+    }
 }

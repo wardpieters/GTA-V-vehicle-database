@@ -1,6 +1,7 @@
 <?php
 
-use Illuminate\Http\Request;
+use App\Http\Controllers\VehicleCollectionController;
+use App\Http\Controllers\VehicleController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,6 +15,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
+Route::apiResource('collections', VehicleCollectionController::class)->only(['index']);
+//Route::apiResource('collections/{slug}/vehicles', VehicleCollectionController::class)->only(['index']);
+Route::apiResource('vehicles', VehicleController::class)->only(['index']);
+Route::get('vehicles/types', [VehicleController::class, 'types']);
+
