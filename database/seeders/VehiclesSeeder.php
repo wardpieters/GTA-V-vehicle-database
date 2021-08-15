@@ -2,10 +2,14 @@
 
 namespace Database\Seeders;
 
+use App\Models\GameUpdate;
 use App\Models\Vehicle;
 use App\Models\VehicleCollection;
+use App\Models\VehicleType;
+use App\Models\Website;
 use Carbon\Carbon;
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\ClientException;
 use Illuminate\Database\Seeder;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Http;
@@ -49,17 +53,31 @@ class VehiclesSeeder extends Seeder
             foreach ($match['VehicleCollections'] as $vehicle_collection) {
                 if ($vehicle_collection['Url'] !== $collection['slug']) continue;
 
-                $this->command->info("Seeding vehicle collection $collection[slug]...");
+                $this->command->info("Seeding vehicle collection '$collection[slug]' ...");
 
                 $i = 0;
                 foreach ($vehicle_collection['Vehicles'] as $vehicle) {
+                    if(!empty($vehicle['Conditional'])) {
+                        $gameUpdate = GameUpdate::firstOrCreate(
+                            ['name' => $vehicle['Conditional']],
+                            ['name' => $vehicle['Conditional']]
+                        );
+                    }
+
+                    if(!empty($vehicle['Type'])) {
+                        $vehicleType = VehicleType::firstOrCreate(
+                            ['name' => $vehicle['Type']],
+                            ['name' => $vehicle['Type']]
+                        );
+                    }
+
                     $new_vehicle = Vehicle::updateOrCreate([
                         'slug' => $vehicle['Url'],
                         'vehicle_collection_id' => $collection['id']
                     ], [
                         'name' => $vehicle['Name'],
-                        'type' => $vehicle['Type'],
-                        'conditional' => $vehicle['Conditional'] ?? null,
+                        'vehicle_type_id' => (isset($vehicleType) ? $vehicleType->id : null),
+                        'game_update_id' => (isset($gameUpdate) ? $gameUpdate->id : null),
                         'speed' => $vehicle['Speed'],
                         'acceleration' => $vehicle['Acceleration'],
                         'braking' => $vehicle['Braking'],
@@ -69,21 +87,36 @@ class VehiclesSeeder extends Seeder
                         'top_braking' => $vehicle['TopBraking'],
                         'top_handling' => $vehicle['TopHandling'],
                         'for_sale' => $vehicle['ForSale'],
-                        'cost' => $vehicle['Cost'],
-                        'website' => $vehicle['Website'] ?? null,
+                        'cost' => $this->formatPrice($vehicle['Cost']),
                         'seats' => $vehicle['Seats'],
                         'personal' => $vehicle['Personal'],
                         'premium' => $vehicle['Premium'],
                         'moddable' => $vehicle['Moddable'],
                         'super_moddable' => $vehicle['SuperModdable'],
                         'sellable' => $vehicle['Sellable'],
-                        'sell_price' => $vehicle['SellPrice'],
+                        'sell_price' => $this->formatPrice($vehicle['SellPrice']),
                         'created_at' => now(),
                         'updated_at' => now(),
                     ]);
 
                     if (!$new_vehicle) {
                         $this->command->error("Vehicle error: can't update or create " . ($vehicle['Name'] ?? "Unknow vehicle") . "\n");
+                    }
+
+                    $websites = array_filter(explode(', ', $vehicle['Website'] ?? ""));
+                    if (!empty($websites)) {
+                        $website_ids = [];
+
+                        foreach($websites as $new_website) {
+                            $website = Website::firstOrCreate(
+                                ['name' => $new_website],
+                                ['name' => $new_website]
+                            );
+
+                            $website_ids[] = $website->id;
+                        }
+
+                        $new_vehicle->websites()->sync($website_ids);
                     }
 
                     // Download image if vehicle was just created.
@@ -113,12 +146,41 @@ class VehiclesSeeder extends Seeder
         }
     }
 
+    /**
+     * @param Client $client
+     * @param Vehicle $vehicle
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
     function saveVehicleImage(Client $client, Vehicle $vehicle) {
         $file_name = "$vehicle->slug.jpg";
-        $this->createDirectory('app/public/vehicles');
 
-        $client->request('GET', "/sc/images/games/GTAV/vehicles/screens/mp/main/$file_name", [
-            'sink' => storage_path("app/public/vehicles/$file_name")
-        ]);
+        try {
+            $this->createDirectory('app/public/vehicles');
+            $file_path = storage_path("app/public/vehicles/$file_name");
+
+            if (!file_exists($file_path)) {
+                $client->request('GET', "/sc/images/games/GTAV/vehicles/screens/mp/main/$file_name", [
+                    'sink' => $file_path
+                ]);
+            }
+
+            return true;
+        } catch (ClientException $ignored) {
+            return false;
+        }
+    }
+
+    function formatPrice($price) {
+        if (str_starts_with($price, 'FREE')) return 0.0;
+
+        $new_price = (float) str_replace([',', '$', 'K', 'M', '*'], '', $price);
+
+        if (str_ends_with($price, 'K') || str_ends_with($price, 'K*')) {
+            $new_price *= 1000;
+        } elseif (str_ends_with($price, 'M') || str_ends_with($price, 'M*')) {
+            $new_price *= 1000000;
+        }
+
+        return $new_price;
     }
 }

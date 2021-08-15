@@ -1,9 +1,10 @@
 table.vehicle-table {
     tbody {
         tr {
-            th {
+            td > img {
                 max-width: 250px;
                 width: 250px;
+                min-width: 125px;
             }
         }
     }

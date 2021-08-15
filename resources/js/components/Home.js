@@ -47,25 +47,25 @@ function Home() {
                             <table className="table table-striped vehicle-table">
                                 <thead>
                                 <tr>
-                                    <th scope="col"/>
+                                    <th scope="col" className={'d-none d-md-table-cell'}/>
                                     <th scope="col">Name</th>
-                                    <th scope="col">Type</th>
-                                    <th scope="col">Cost</th>
-                                    <th scope="col">Sell price</th>
-                                    <th scope="col">Website</th>
+                                    <th scope="col" className={'d-none d-md-table-cell'}>Type</th>
+                                    <th scope="col" className={'d-none d-md-table-cell'}>Website</th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 {vehicles.map((vehicle, key) => (
                                     <tr key={key}>
-                                        <th scope="row">
+                                        <td className={'d-none d-md-table-cell'}>
                                             <img className={'img-fluid'} src={vehicle.image_url} alt=""/>
-                                        </th>
-                                        <td>{vehicle.vehicle_type}</td>
-                                        <td>{vehicle.name}</td>
-                                        <td>{(vehicle.sellable ? vehicle.sell_price : "N/A")}</td>
-                                        <td>{vehicle.cost}</td>
-                                        <td>{vehicle.website}</td>
+                                        </td>
+                                        <td>
+                                            <img className={'img-fluid d-md-none'} src={vehicle.image_url} alt=""/>
+                                            {vehicle.name}
+                                            <span className={'d-md-none'}>{vehicle.website}</span>
+                                        </td>
+                                        <td className={'d-none d-md-table-cell'}>{vehicle.type}</td>
+                                        <td className={'d-none d-md-table-cell'}>{vehicle.website}</td>
                                     </tr>
                                 ))}
                                 </tbody>
