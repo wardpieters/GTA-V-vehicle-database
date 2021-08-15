@@ -36,14 +36,14 @@ class CreateVehicleTypesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('vehicle_types');
-
         Schema::table('vehicles', function (Blueprint $table) {
-            $table->dropColumn('type');
+            $table->dropConstrainedForeignId('vehicle_type_id');
         });
 
         Schema::table('vehicles', function (Blueprint $table) {
             $table->string('type')->after('slug');
         });
+
+        Schema::dropIfExists('vehicle_types');
     }
 }

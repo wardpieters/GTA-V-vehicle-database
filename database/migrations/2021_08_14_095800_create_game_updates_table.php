@@ -32,11 +32,11 @@ class CreateGameUpdatesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('game_updates');
-
         Schema::table('vehicles', function (Blueprint $table) {
             $table->string('conditional')->nullable();
-            $table->dropColumn('game_update_id');
+            $table->dropConstrainedForeignId('game_update_id');
         });
+
+        Schema::dropIfExists('game_updates');
     }
 }
