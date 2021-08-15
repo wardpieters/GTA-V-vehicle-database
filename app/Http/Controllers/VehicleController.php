@@ -31,10 +31,9 @@ class VehicleController extends Controller
         $vehicles = Vehicle::where(function ($q) use ($query) {
             $q->where('name', 'LIKE', "%$query%");
             $q->orWhere('slug', 'LIKE', "%$query%");
-            $q->orWhere('conditional', 'LIKE', "%$query%");
         })
             ->when(!empty($request->input('vehicle_type')), function ($q) use ($request) {
-                return $q->where('type', '=', $request->input('vehicle_type'));
+                return $q->where('vehicle_type_id', '=', $request->input('vehicle_type'));
             })->get();
 
         if ($vehicles->count() == 0) {
@@ -87,19 +86,6 @@ class VehicleController extends Controller
     public function destroy($id)
     {
         //
-    }
-
-    /**
-     * @return Collection
-     */
-    public function types(): Collection
-    {
-        return DB::table('vehicles')
-            ->select('type')
-            ->whereNotNull('type')
-            ->where('type', '!=', '')
-            ->distinct()
-            ->pluck('type');
     }
 
     function dq($query){

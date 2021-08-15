@@ -14,7 +14,7 @@ function VehicleTypeSelect(props) {
         })
             .then(res => res.json())
             .then(res => {
-                setTypes(res);
+                setTypes(res.data);
                 setIsLoading(false);
             })
             .catch(error => console.log(error))
@@ -25,8 +25,8 @@ function VehicleTypeSelect(props) {
             {isLoading ? <p>Loading...</p> : (
                 <select className={'form-select'} onChange={(e) => {onChange(e.target.value)}} defaultValue={""}>
                     <option key={0} value="">NO FILTER</option>
-                    {types.map((type) => (
-                        <option key={type} value={type}>{type}</option>
+                    {types.map((type, key) => (
+                        <option key={type.name} value={type.id}>{type.name_formatted}</option>
                     ))}
                 </select>
             )}
