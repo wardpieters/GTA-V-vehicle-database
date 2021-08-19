@@ -28,7 +28,7 @@ class VehicleController extends Controller
                 });
             })
             ->when(!empty($request->input('type')), function ($q) use ($request) {
-                return $q->where('vehicle_type_id', '=', $request->input('vehicle_type'));
+                return $q->where('vehicle_type_id', '=', $request->input('type'));
             })
             ->when(!empty($request->input('game_update')), function ($q) use ($request) {
                 return $q->where('game_update_id', '=', $request->input('game_update'));

@@ -68,6 +68,9 @@ function Home() {
                 <>
                     {vehicles.length > 0 ? (
                         <div className="row">
+                            {vehicles.length === 100 && (
+                                <div className="col-12">Search results limited to 100 results, please refine your search query.</div>
+                            )}
                             {vehicles.map((vehicle, key) => (
                                 <div className={'col-xs-12 col-sm-6 col-md-4 col-xl-3'} key={key}>
                                     <img className={'img-fluid'} src={vehicle.image_url} alt=""/>
