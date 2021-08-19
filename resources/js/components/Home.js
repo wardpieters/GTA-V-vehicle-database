@@ -55,13 +55,13 @@ function Home() {
                     <SearchQueryInput onChange={searchQueryOnChange}/>
                 </div>
                 <div className="col-auto">
-                    <VehicleTypeSelect onChange={vehicleTypeOnChange} selectName={'Select an option'}/>
+                    <VehicleTypeSelect onChange={vehicleTypeOnChange} selectName={'Select a vehicle type'}/>
                 </div>
                 <div className="col-auto">
-                    <GameUpdateSelect onChange={gameUpdateOnChange} selectName={'Select an option'}/>
+                    <GameUpdateSelect onChange={gameUpdateOnChange} selectName={'Select an update'}/>
                 </div>
                 <div className="col-auto">
-                    <WebsiteSelect onChange={websiteOnChange} selectName={'Select an option'}/>
+                    <WebsiteSelect onChange={websiteOnChange} selectName={'Select a website'}/>
                 </div>
             </div>
             {isLoading ? <p>Loading...</p> : (
@@ -74,8 +74,12 @@ function Home() {
                             {vehicles.map((vehicle, key) => (
                                 <div className={'col-xs-12 col-sm-6 col-md-4 col-xl-3'} key={key}>
                                     <img className={'img-fluid'} src={vehicle.image_url} alt=""/>
-                                    <h3 className={'mt-1'}>{vehicle.name}{vehicle.type?.name && (
-                                        <span className="text-muted ml-1">({vehicle.type?.name})</span>)}</h3>
+                                    <h3 className={'mt-1'}>
+                                        {vehicle.name}
+                                        {vehicle.type?.name && (
+                                            <span className="text-muted ml-1">({vehicle.type?.name})</span>
+                                        )}
+                                    </h3>
                                     {vehicle.websites.length > 0 ? (
                                         <div>
                                             <p>{new Intl.NumberFormat('nl-NL', {

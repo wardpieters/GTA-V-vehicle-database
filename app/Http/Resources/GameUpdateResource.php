@@ -18,6 +18,7 @@ class GameUpdateResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
+            'vehicles' => $this->vehicles->count()
         ];
     }
 }

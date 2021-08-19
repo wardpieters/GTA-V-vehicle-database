@@ -8,4 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class GameUpdate extends Model
 {
     use HasFactory;
+
+    public function vehicles()
+    {
+        return $this->hasMany(Vehicle::class);
+    }
 }

@@ -26,7 +26,7 @@ function GameUpdateSelect(props) {
                 <select className={'form-select'} onChange={(e) => {onChange(e.target.value)}} defaultValue={""}>
                     <option key={0} value="">{selectName}</option>
                     {gameUpdates.map((type) => (
-                        <option key={type.name} value={type.id}>{type.name}</option>
+                        <option key={type.name} value={type.id}>{type.name} ({type.vehicles})</option>
                     ))}
                 </select>
             )}
