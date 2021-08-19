@@ -8,7 +8,6 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\DB;
 
 class VehicleController extends Controller
 {
@@ -21,19 +20,26 @@ class VehicleController extends Controller
     {
         $query = $request->get('q');
 
-        if (!isset($query) || strlen($query) < 2) {
-            return response()->json(['data' => [], 'error' => ['message' => "Please provide a search query."]]);
-        }
-
-        DB::enableQueryLog(); // Enable query log
-
-        $vehicles = Vehicle::where(function ($q) use ($query) {
-            $q->where('name', 'LIKE', "%$query%");
-            $q->orWhere('slug', 'LIKE', "%$query%");
-        })
-            ->when(!empty($request->input('vehicle_type')), function ($q) use ($request) {
+        $vehicles = Vehicle::with(['type', 'websites'])
+            ->when(!empty($request->input('q')), function ($q) use ($request, $query) {
+                return $q->where(function ($q) use ($query) {
+                    $q->where('name', 'LIKE', "%$query%");
+                    $q->orWhere('slug', 'LIKE', "%$query%");
+                });
+            })
+            ->when(!empty($request->input('type')), function ($q) use ($request) {
                 return $q->where('vehicle_type_id', '=', $request->input('vehicle_type'));
-            })->get();
+            })
+            ->when(!empty($request->input('game_update')), function ($q) use ($request) {
+                return $q->where('game_update_id', '=', $request->input('game_update'));
+            })
+            ->when(!empty($request->input('website')), function ($q) use ($request) {
+                $q->whereHas('websites', function ($query) use ($request) {
+                    $query->where('websites.id', $request->input('website'));
+                });
+            })
+            ->limit(100)
+            ->get();
 
         if ($vehicles->count() == 0) {
             return response()->json(['data' => [], 'error' => ['message' => "No results were found."]]);

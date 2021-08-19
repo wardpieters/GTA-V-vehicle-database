@@ -4,7 +4,6 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
-use Illuminate\Support\Facades\Storage;
 
 class VehicleResource extends JsonResource
 {
@@ -19,7 +18,7 @@ class VehicleResource extends JsonResource
         return [
             'name' => $this->name,
             'slug' => $this->slug,
-            'type' => $this->type,
+            'type' => new VehicleTypeResource($this->type),
             'conditional' => $this->conditional,
             'speed' => $this->speed,
             'acceleration' => $this->acceleration,
@@ -30,7 +29,7 @@ class VehicleResource extends JsonResource
             'top_braking' => $this->top_braking,
             'top_handling' => $this->top_handling,
             'for_sale' => $this->for_sale,
-            'website' => $this->website,
+            'websites' => WebsiteResource::collection($this->websites),
             'cost' => $this->cost,
             'seats' => $this->seats,
             'personal' => $this->personal,

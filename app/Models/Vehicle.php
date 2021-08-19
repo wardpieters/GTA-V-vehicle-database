@@ -31,4 +31,9 @@ class Vehicle extends Model
             VehicleWebsite::class
         )->withTimestamps();
     }
+
+    public function type()
+    {
+        return $this->belongsTo(VehicleType::class, 'vehicle_type_id');
+    }
 }

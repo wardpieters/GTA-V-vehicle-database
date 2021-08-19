@@ -1,12 +1,12 @@
 import React, {useEffect, useState} from 'react';
 
-function VehicleTypeSelect(props) {
+function GameUpdateSelect(props) {
     const [isLoading, setIsLoading] = useState(true);
-    const [types, setTypes] = useState([]);
+    const [gameUpdates, setGameUpdates] = useState([]);
     const {onChange, selectName} = props;
 
     useEffect(() => {
-        fetch(`/api/vehicles/types`, {
+        fetch(`/api/updates`, {
             method: "GET",
             headers: new Headers({
                 "Accept": "application/json"
@@ -14,7 +14,7 @@ function VehicleTypeSelect(props) {
         })
             .then(res => res.json())
             .then(res => {
-                setTypes(res.data);
+                setGameUpdates(res.data);
                 setIsLoading(false);
             })
             .catch(error => console.log(error))
@@ -25,7 +25,7 @@ function VehicleTypeSelect(props) {
             {isLoading ? <p>Loading...</p> : (
                 <select className={'form-select'} onChange={(e) => {onChange(e.target.value)}} defaultValue={""}>
                     <option key={0} value="">{selectName}</option>
-                    {types.map((type) => (
+                    {gameUpdates.map((type) => (
                         <option key={type.name} value={type.id}>{type.name}</option>
                     ))}
                 </select>
@@ -34,4 +34,4 @@ function VehicleTypeSelect(props) {
     );
 }
 
-export default VehicleTypeSelect;
+export default GameUpdateSelect;

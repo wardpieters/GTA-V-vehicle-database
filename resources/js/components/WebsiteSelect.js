@@ -1,12 +1,12 @@
 import React, {useEffect, useState} from 'react';
 
-function VehicleTypeSelect(props) {
+function WebsiteSelect(props) {
     const [isLoading, setIsLoading] = useState(true);
-    const [types, setTypes] = useState([]);
+    const [websites, setWebsites] = useState([]);
     const {onChange, selectName} = props;
 
     useEffect(() => {
-        fetch(`/api/vehicles/types`, {
+        fetch(`/api/websites`, {
             method: "GET",
             headers: new Headers({
                 "Accept": "application/json"
@@ -14,7 +14,7 @@ function VehicleTypeSelect(props) {
         })
             .then(res => res.json())
             .then(res => {
-                setTypes(res.data);
+                setWebsites(res.data);
                 setIsLoading(false);
             })
             .catch(error => console.log(error))
@@ -25,7 +25,7 @@ function VehicleTypeSelect(props) {
             {isLoading ? <p>Loading...</p> : (
                 <select className={'form-select'} onChange={(e) => {onChange(e.target.value)}} defaultValue={""}>
                     <option key={0} value="">{selectName}</option>
-                    {types.map((type) => (
+                    {websites.map((type) => (
                         <option key={type.name} value={type.id}>{type.name}</option>
                     ))}
                 </select>
@@ -34,4 +34,4 @@ function VehicleTypeSelect(props) {
     );
 }
 
-export default VehicleTypeSelect;
+export default WebsiteSelect;

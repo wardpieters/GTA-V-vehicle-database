@@ -2,22 +2,22 @@
 
 namespace App\Http\Resources;
 
+use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class VehicleTypeResource extends JsonResource
+class WebsiteResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  Request  $request
      * @return array
      */
     public function toArray($request)
     {
         return [
             'id' => $this->id,
-            'name' => ucfirst(strtolower($this->name)),
-            'slug' => strtolower($this->name),
+            'name' => $this->name,
         ];
     }
 }
