@@ -57,6 +57,9 @@ class VehiclesSeeder extends Seeder
 
                 $i = 0;
                 foreach ($vehicle_collection['Vehicles'] as $vehicle) {
+                    $gameUpdate = null;
+                    $vehicleType = null;
+
                     if(!empty($vehicle['Conditional'])) {
                         $gameUpdate = GameUpdate::firstOrCreate(
                             ['name' => $vehicle['Conditional']],
@@ -76,8 +79,8 @@ class VehiclesSeeder extends Seeder
                         'vehicle_collection_id' => $collection['id']
                     ], [
                         'name' => $vehicle['Name'],
-                        'vehicle_type_id' => (isset($vehicleType) ? $vehicleType->id : null),
-                        'game_update_id' => (isset($gameUpdate) ? $gameUpdate->id : null),
+                        'vehicle_type_id' => (!empty($vehicleType) ? $vehicleType->id : null),
+                        'game_update_id' => (!empty($gameUpdate) ? $gameUpdate->id : null),
                         'speed' => $vehicle['Speed'],
                         'acceleration' => $vehicle['Acceleration'],
                         'braking' => $vehicle['Braking'],

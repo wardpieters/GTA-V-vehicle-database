@@ -10,7 +10,14 @@ function Home() {
     const [isLoading, setIsLoading] = useState(true);
 
     const updateData = () => {
-        fetch(`/api/vehicles?q=${searchQuery.query}&type=${searchQuery.vehicle_type}&website=${searchQuery.website}&game_update=${searchQuery.game_update}`, {
+        let searchParams = new URLSearchParams({
+            q: searchQuery.query,
+            type: searchQuery.vehicle_type,
+            website: searchQuery.website,
+            game_update: searchQuery.game_update,
+        }).toString();
+
+        fetch(`/api/vehicles?${searchParams}`, {
             method: "GET",
             headers: new Headers({
                 "Accept": "application/json"

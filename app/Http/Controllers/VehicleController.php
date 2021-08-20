@@ -39,6 +39,7 @@ class VehicleController extends Controller
                 });
             })
             ->limit(100)
+            ->orderBy('name')
             ->get();
 
         if ($vehicles->count() == 0) {
