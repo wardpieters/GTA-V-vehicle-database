@@ -11,7 +11,7 @@ function SearchQueryInput(props) {
 
     return (
         <>
-            <input type="text" className={`${className ?? ""}`} value={state.value} onChange={onInputChange} />
+            <input type="text" placeholder={'Search...'} className={`form-control ${className ?? ""}`} value={state.value} onChange={onInputChange} />
         </>
     );
 }

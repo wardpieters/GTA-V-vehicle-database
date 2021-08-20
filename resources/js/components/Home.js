@@ -58,13 +58,13 @@ function Home() {
     return (
         <>
             <div className={"row mb-3"}>
-                <div className="col-auto">
+                <div className="col-auto mb-2 mb-xl-0">
                     <SearchQueryInput onChange={searchQueryOnChange}/>
                 </div>
-                <div className="col-auto">
+                <div className="col-auto mb-2 mb-xl-0">
                     <VehicleTypeSelect onChange={vehicleTypeOnChange} selectName={'Select a vehicle type'}/>
                 </div>
-                <div className="col-auto">
+                <div className="col-auto mb-2 mb-xl-0">
                     <GameUpdateSelect onChange={gameUpdateOnChange} selectName={'Select an update'}/>
                 </div>
                 <div className="col-auto">
@@ -81,9 +81,9 @@ function Home() {
                             {vehicles.map((vehicle, key) => (
                                 <div className={'col-xs-12 col-sm-6 col-md-4 col-xl-3'} key={key}>
                                     <img className={'img-fluid'} src={vehicle.image_url} alt=""/>
-                                    <h3 className={'mt-1 mb-0'}>
+                                    <h4 className={'mt-1 mb-0'}>
                                         {vehicle.name}
-                                    </h3>
+                                    </h4>
                                     {vehicle.type?.name && (
                                         <p className="text-muted mb-1">{vehicle.type?.name}</p>
                                     )}
