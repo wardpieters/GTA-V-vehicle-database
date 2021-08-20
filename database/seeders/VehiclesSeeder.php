@@ -9,7 +9,7 @@ use App\Models\VehicleType;
 use App\Models\Website;
 use Carbon\Carbon;
 use GuzzleHttp\Client;
-use GuzzleHttp\Exception\ClientException;
+use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Database\Seeder;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Http;
@@ -127,7 +127,8 @@ class VehiclesSeeder extends Seeder
                     // Download image if vehicle was just created.
                     if ($new_vehicle && $new_vehicle->wasRecentlyCreated) {
                         $i++;
-                        $this->saveVehicleImage($cdn_client, $new_vehicle);
+                        $vehicleImage = $this->saveVehicleImage($cdn_client, $new_vehicle);
+                        $new_vehicle->update(['image_path' => $vehicleImage ?? "no-img.png"]);
                     }
                 }
 
@@ -154,23 +155,25 @@ class VehiclesSeeder extends Seeder
     /**
      * @param Client $client
      * @param Vehicle $vehicle
-     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @return false|string
+     * @throws GuzzleException
      */
     function saveVehicleImage(Client $client, Vehicle $vehicle) {
-        $file_name = "$vehicle->slug.jpg";
-
         try {
             $this->createDirectory('app/public/vehicles');
-            $file_path = storage_path("app/public/vehicles/$file_name");
 
-            if (!file_exists($file_path)) {
+            $file_name = "$vehicle->slug.jpg";
+            $file_path = "vehicles/$file_name";
+            $storage_path = storage_path("app/public/vehicles/$file_name");
+
+            if (!file_exists($storage_path)) {
                 $client->request('GET', "/sc/images/games/GTAV/vehicles/screens/mp/main/$file_name", [
-                    'sink' => $file_path
+                    'sink' => $storage_path
                 ]);
             }
 
-            return true;
-        } catch (ClientException $ignored) {
+            return $file_path;
+        } catch (\Exception $ignored) {
             return false;
         }
     }

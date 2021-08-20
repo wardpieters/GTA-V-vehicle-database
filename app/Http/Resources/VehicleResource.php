@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Storage;
 
 class VehicleResource extends JsonResource
 {
@@ -38,7 +39,7 @@ class VehicleResource extends JsonResource
             'super_moddable' => $this->super_moddable,
             'sellable' => $this->sellable,
             'sell_price' => $this->sell_price,
-            'image_url' => "/storage/vehicles/$this->slug.jpg"
+            'image_url' => Storage::url($this->image_path)
         ];
     }
 }
