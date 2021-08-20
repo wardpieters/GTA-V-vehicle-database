@@ -81,15 +81,15 @@ function Home() {
                             {vehicles.map((vehicle, key) => (
                                 <div className={'col-xs-12 col-sm-6 col-md-4 col-xl-3'} key={key}>
                                     <img className={'img-fluid'} src={vehicle.image_url} alt=""/>
-                                    <h3 className={'mt-1'}>
+                                    <h3 className={'mt-1 mb-0'}>
                                         {vehicle.name}
-                                        {vehicle.type?.name && (
-                                            <span className="text-muted ml-1">({vehicle.type?.name})</span>
-                                        )}
                                     </h3>
+                                    {vehicle.type?.name && (
+                                        <p className="text-muted mb-1">{vehicle.type?.name}</p>
+                                    )}
                                     {vehicle.websites.length > 0 ? (
                                         <div>
-                                            <p>{new Intl.NumberFormat('nl-NL', {
+                                            <p className={'mb-1'}>{new Intl.NumberFormat('nl-NL', {
                                                 style: 'currency',
                                                 currency: 'USD'
                                             }).format(vehicle.cost)}</p>

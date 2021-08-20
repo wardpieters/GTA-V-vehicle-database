@@ -111,6 +111,8 @@ class VehiclesSeeder extends Seeder
                         $website_ids = [];
 
                         foreach($websites as $new_website) {
+                            $new_website = str_replace('www.', '', $new_website);
+
                             $website = Website::firstOrCreate(
                                 ['name' => $new_website],
                                 ['name' => $new_website]
