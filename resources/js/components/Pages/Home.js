@@ -1,8 +1,10 @@
 import React, {useEffect, useState} from 'react';
-import VehicleTypeSelect from "./VehicleTypeSelect";
-import SearchQueryInput from "./SearchQueryInput";
-import GameUpdateSelect from "./GameUpdateSelect";
-import WebsiteSelect from "./WebsiteSelect";
+import VehicleTypeSelect from "../VehicleTypeSelect";
+import SearchQueryInput from "../SearchQueryInput";
+import GameUpdateSelect from "../GameUpdateSelect";
+import WebsiteSelect from "../WebsiteSelect";
+import {Link} from "react-router-dom";
+import LoadingSpinner from "../LoadingSpinner";
 
 function Home() {
     const [searchQuery, setSearchQuery] = useState({query: '', game_update: 0, vehicle_type: 0, website: 0});
@@ -71,7 +73,9 @@ function Home() {
                     <WebsiteSelect onChange={websiteOnChange} selectName={'Select a website'}/>
                 </div>
             </div>
-            {isLoading ? <p>Loading...</p> : (
+            {isLoading ? (
+                <LoadingSpinner/>
+            ) : (
                 <>
                     {vehicles.length > 0 ? (
                         <div className="row">
@@ -80,10 +84,12 @@ function Home() {
                             )}
                             {vehicles.map((vehicle, key) => (
                                 <div className={'col-xs-12 col-sm-6 col-md-4 col-xl-3'} key={key}>
-                                    <img className={'img-fluid'} src={vehicle.image_url} alt=""/>
-                                    <h4 className={'mt-1 mb-0'}>
-                                        {vehicle.name}
-                                    </h4>
+                                    <Link className={'text-decoration-none'} to={`/vehicle/${vehicle.slug}`}>
+                                        <img className={'img-fluid'} src={vehicle.image_url} alt=""/>
+                                        <h4 className={'text-black mt-1 mb-0'}>
+                                            {vehicle.name}
+                                        </h4>
+                                    </Link>
                                     {vehicle.type?.name && (
                                         <p className="text-muted mb-1">{vehicle.type?.name}</p>
                                     )}

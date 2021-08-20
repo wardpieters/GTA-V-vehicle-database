@@ -20,7 +20,7 @@ class VehicleResource extends JsonResource
             'name' => $this->name,
             'slug' => $this->slug,
             'type' => new VehicleTypeResource($this->type),
-            'conditional' => $this->conditional,
+            'game_update' => new GameUpdateResource($this->gameUpdate),
             'speed' => $this->speed,
             'acceleration' => $this->acceleration,
             'braking' => $this->braking,

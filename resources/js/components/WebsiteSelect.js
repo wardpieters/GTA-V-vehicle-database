@@ -1,4 +1,5 @@
 import React, {useEffect, useState} from 'react';
+import LoadingSpinner from "./LoadingSpinner";
 
 function WebsiteSelect(props) {
     const [isLoading, setIsLoading] = useState(true);
@@ -22,8 +23,12 @@ function WebsiteSelect(props) {
 
     return (
         <div>
-            {isLoading ? <p>Loading...</p> : (
-                <select className={'form-select'} onChange={(e) => {onChange(e.target.value)}} defaultValue={""}>
+            {isLoading ? (
+                <LoadingSpinner/>
+            ) : (
+                <select className={'form-select'} onChange={(e) => {
+                    onChange(e.target.value)
+                }} defaultValue={""}>
                     <option key={0} value="">{selectName}</option>
                     {websites.map((type) => (
                         <option key={type.name} value={type.id}>{type.name}</option>

@@ -13,7 +13,7 @@ class VehicleTypeController extends Controller
      *
      * @return AnonymousResourceCollection
      */
-    public function index()
+    public function index(): AnonymousResourceCollection
     {
         return VehicleTypeResource::collection(VehicleType::all());
     }

@@ -19,8 +19,8 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::apiResource('collections', VehicleCollectionController::class)->only(['index']);
-Route::apiResource('vehicles', VehicleController::class)->only(['index']);
-Route::get('vehicles/types', [VehicleTypeController::class, 'index']);
+Route::apiResource('vehicles', VehicleController::class)->only(['index', 'show']);
+Route::apiResource('types', VehicleTypeController::class)->only(['index']);
 Route::apiResource('updates', GameUpdateController::class)->only(['index']);
 Route::apiResource('websites', WebsiteController::class)->only(['index']);
 

@@ -1,4 +1,5 @@
 import React, {useEffect, useState} from 'react';
+import LoadingSpinner from "./LoadingSpinner";
 
 function GameUpdateSelect(props) {
     const [isLoading, setIsLoading] = useState(true);
@@ -22,7 +23,9 @@ function GameUpdateSelect(props) {
 
     return (
         <div>
-            {isLoading ? <p>Loading...</p> : (
+            {isLoading ? (
+                <LoadingSpinner/>
+            ) : (
                 <select className={'form-select'} onChange={(e) => {onChange(e.target.value)}} defaultValue={""}>
                     <option key={0} value="">{selectName}</option>
                     {gameUpdates.map((type) => (

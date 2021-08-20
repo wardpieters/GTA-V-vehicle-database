@@ -1,11 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {
-    BrowserRouter as Router,
-    Switch,
-    Route
-} from "react-router-dom";
-import Home from "./Home";
+import {BrowserRouter as Router, Route, Switch} from "react-router-dom";
+import Home from "./Pages/Home";
+import VehicleDetails from "./Pages/VehicleDetails";
+import NotFound from "./Pages/NotFound";
 
 function App() {
     return (
@@ -13,8 +11,14 @@ function App() {
             <Router>
                 <div>
                     <Switch>
-                        <Route path="/">
+                        <Route path="/" exact={true}>
                             <Home/>
+                        </Route>
+                        <Route path="/vehicle/:slug" exact={true}>
+                            <VehicleDetails/>
+                        </Route>
+                        <Route path="*">
+                            <NotFound />
                         </Route>
                     </Switch>
                 </div>

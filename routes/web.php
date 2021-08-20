@@ -13,5 +13,4 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::view('/', 'react');
-Route::view('/(.*)', 'react');
+Route::view('/{path?}', 'react')->where('path', '.*')->name('react');

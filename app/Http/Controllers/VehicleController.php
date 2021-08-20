@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\VehicleResource;
 use App\Models\Vehicle;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
@@ -64,11 +65,15 @@ class VehicleController extends Controller
      * Display the specified resource.
      *
      * @param int $id
-     * @return Response
+     * @return VehicleResource
      */
-    public function show($id)
+    public function show($id): VehicleResource
     {
-        //
+        $vehicle = Vehicle::with(['type', 'websites'])->where('slug', '=', $id)->first();
+
+        if (!$vehicle) throw new ModelNotFoundException();
+
+        return new VehicleResource($vehicle);
     }
 
     /**
