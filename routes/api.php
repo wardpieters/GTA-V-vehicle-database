@@ -19,7 +19,11 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::apiResource('collections', VehicleCollectionController::class)->only(['index']);
-Route::apiResource('vehicles', VehicleController::class)->only(['index', 'show']);
+
+// Vehicles
+Route::match(['get', 'post'], 'vehicles', [VehicleController::class, 'index']);
+Route::apiResource('vehicles', VehicleController::class)->only(['show']);
+
 Route::apiResource('types', VehicleTypeController::class)->only(['index']);
 Route::apiResource('updates', GameUpdateController::class)->only(['index']);
 Route::apiResource('websites', WebsiteController::class)->only(['index']);

@@ -19,22 +19,23 @@ class VehicleController extends Controller
      */
     public function index(Request $request)
     {
-        $query = $request->get('q');
+        $query = $request->json()->get('q');
+        $query_game_update = array_values($request->json()->get('game_update') ?? []) ?? [];
 
         $vehicles = Vehicle::with(['type', 'websites'])
-            ->when(!empty($request->input('q')), function ($q) use ($request, $query) {
+            ->when(!empty($query), function ($q) use ($request, $query) {
                 return $q->where(function ($q) use ($query) {
                     $q->where('name', 'LIKE', "%$query%");
                     $q->orWhere('slug', 'LIKE', "%$query%");
                 });
             })
-            ->when(!empty($request->input('type')), function ($q) use ($request) {
+            ->when(!empty($request->json()->get('type')), function ($q) use ($request) {
                 return $q->where('vehicle_type_id', '=', $request->input('type'));
             })
-            ->when(!empty($request->input('game_update')), function ($q) use ($request) {
-                return $q->where('game_update_id', '=', $request->input('game_update'));
+            ->when(!empty($query_game_update), function ($q) use ($request, $query_game_update) {
+                return $q->whereIn('game_update_id', $query_game_update);
             })
-            ->when(!empty($request->input('website')), function ($q) use ($request) {
+            ->when(!empty($request->json()->get('website')), function ($q) use ($request) {
                 $q->whereHas('websites', function ($query) use ($request) {
                     $query->where('websites.id', $request->input('website'));
                 });
