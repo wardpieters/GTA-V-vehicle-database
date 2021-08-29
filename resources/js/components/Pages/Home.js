@@ -55,7 +55,7 @@ function Home() {
         } else {
             // Remove from array
             setSearchQuery({...searchQuery, game_update: searchQuery.game_update.filter(function (item) {
-                    return id !== id;
+                    return item !== id;
             })});
         }
     }
