@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\VehicleSearchRequest;
 use App\Http\Resources\VehicleResource;
 use App\Models\Vehicle;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -17,10 +18,12 @@ class VehicleController extends Controller
      *
      * @return JsonResponse|AnonymousResourceCollection
      */
-    public function index(Request $request)
+    public function index(VehicleSearchRequest $request)
     {
-        $query = $request->json()->get('q');
-        $query_game_update = array_values($request->json()->get('game_update') ?? []) ?? [];
+        $query = $request->input('q');
+        $query_game_update = $request->input('game_update');
+        $query_website = $request->input('website');
+        $query_type = $request->input('type');
 
         $vehicles = Vehicle::with(['type', 'websites'])
             ->when(!empty($query), function ($q) use ($request, $query) {
@@ -29,15 +32,15 @@ class VehicleController extends Controller
                     $q->orWhere('slug', 'LIKE', "%$query%");
                 });
             })
-            ->when(!empty($request->json()->get('type')), function ($q) use ($request) {
-                return $q->where('vehicle_type_id', '=', $request->input('type'));
+            ->when(!empty($query_type), function ($q) use ($query_type) {
+                return $q->whereIn('vehicle_type_id', $query_type);
             })
-            ->when(!empty($query_game_update), function ($q) use ($request, $query_game_update) {
+            ->when(!empty($query_game_update), function ($q) use ($query_game_update) {
                 return $q->whereIn('game_update_id', $query_game_update);
             })
-            ->when(!empty($request->json()->get('website')), function ($q) use ($request) {
-                $q->whereHas('websites', function ($query) use ($request) {
-                    $query->where('websites.id', $request->input('website'));
+            ->when(!empty($query_website), function ($q) use ($query_website) {
+                $q->whereHas('websites', function ($query) use ($query_website) {
+                    $query->whereIn('websites.id', $query_website);
                 });
             })
             ->limit(100)
