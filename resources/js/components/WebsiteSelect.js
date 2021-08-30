@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import LoadingSpinner from "./LoadingSpinner";
-import {Collapse} from "react-bootstrap";
+import {Collapse, Form} from "react-bootstrap";
 
 function WebsiteSelect(props) {
     const [isLoading, setIsLoading] = useState(true);
@@ -36,10 +36,12 @@ function WebsiteSelect(props) {
                         <Collapse in={isCollapsed}>
                             <div className={'checkbox-container__collapse'}>
                                 {websites.map((website) => (
-                                    <label htmlFor={`website_${website.id}`} key={website.name} className={"d-block mb-1"}>
-                                        <input onChange={(e) => {onChange('website', website.id, e.target.checked)}} type="checkbox" name={"website"} id={`website_${website.id}`} value={website.id}/>
-                                        <span className={"ms-1"}>{website.name}</span>
-                                    </label>
+                                    <Form.Check key={website.id}
+                                        type={"checkbox"}
+                                        label={website.name}
+                                        id={`website_${website.id}`}
+                                        onChange={(e) => {onChange('website', website.id, e.target.checked)}}
+                                    />
                                 ))}
                             </div>
                         </Collapse>

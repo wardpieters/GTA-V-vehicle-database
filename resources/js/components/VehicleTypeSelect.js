@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import LoadingSpinner from "./LoadingSpinner";
-import {Collapse} from "react-bootstrap";
+import {Collapse, Form} from "react-bootstrap";
 
 function VehicleTypeSelect(props) {
     const [isLoading, setIsLoading] = useState(true);
@@ -37,11 +37,12 @@ function VehicleTypeSelect(props) {
                     <Collapse in={isCollapsed}>
                         <div className={'checkbox-container__collapse'}>
                             {types.map((type) => (
-                                <label htmlFor={`type_${type.id}`} key={type.name} className={"d-block mb-1"}>
-                                    <input type="checkbox" name={"type"} id={`type_${type.id}`} value={type.id}
-                                           onChange={(e) => {onChange('vehicle_type', type.id, e.target.checked)}}/>
-                                    <span className={"ms-1"}>{type.name}</span>
-                                </label>
+                                <Form.Check key={type.id}
+                                    type={"checkbox"}
+                                    label={type.name}
+                                    id={`type_${type.id}`}
+                                    onChange={(e) => {onChange('vehicle_type', type.id, e.target.checked)}}
+                                />
                             ))}
                         </div>
                     </Collapse>

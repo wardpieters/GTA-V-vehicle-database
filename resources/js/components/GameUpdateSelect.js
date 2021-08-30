@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Collapse} from 'react-bootstrap'
+import {Collapse, Form} from 'react-bootstrap'
 import LoadingSpinner from "./LoadingSpinner";
 
 function GameUpdateSelect(props) {
@@ -34,11 +34,13 @@ function GameUpdateSelect(props) {
                     </div>
                     <Collapse in={isCollapsed}>
                         <div className={'checkbox-container__collapse'}>
-                            {gameUpdates.map((type) => (
-                                <label htmlFor={`game_update_${type.id}`} key={type.name} className={"d-block mb-1"}>
-                                    <input onChange={(e) => {onChange('game_update', type.id, e.target.checked)}} type="checkbox" name={"game_update"} id={`game_update_${type.id}`} value={type.id}/>
-                                    <span className={"ms-1"}>{type.name}<span className={'text-muted'}> ({type.vehicles})</span></span>
-                                </label>
+                            {gameUpdates.map((gameUpdate) => (
+                                <Form.Check key={gameUpdate.id}
+                                    type={"checkbox"}
+                                    label={<>{gameUpdate.name}<span className={'text-muted'}> ({gameUpdate.vehicles})</span></>}
+                                    id={`game_update_${gameUpdate.id}`}
+                                    onChange={(e) => {onChange('game_update', gameUpdate.id, e.target.checked)}}
+                                />
                             ))}
                         </div>
                     </Collapse>
