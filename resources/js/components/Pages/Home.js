@@ -6,9 +6,11 @@ import WebsiteSelect from "../WebsiteSelect";
 import {Link} from "react-router-dom";
 import LoadingSpinner from "../LoadingSpinner";
 import ErrorBoundary from "../ErrorBoundary";
+import {useDebouncedValue} from '@mantine/hooks';
 
 function Home() {
     const [searchQuery, setSearchQuery] = useState({query: '', game_update: [], vehicle_type: [], website: []});
+    const [debouncedSearchQuery] = useDebouncedValue(searchQuery, 200);
     const [vehicles, setVehicles] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
 
@@ -44,7 +46,7 @@ function Home() {
 
     useEffect(() => {
         updateData()
-    }, [searchQuery]);
+    }, [debouncedSearchQuery]);
 
     function arrayVariableOnChange(variable, id, value) {
         setSearchQuery({

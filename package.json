@@ -25,6 +25,7 @@
         "sass-loader": "^11.0.1"
     },
     "dependencies": {
+        "@mantine/hooks": "^2.3.2",
         "react-bootstrap": "^2.0.0-beta.6",
         "react-router-dom": "^5.2.0"
     }
