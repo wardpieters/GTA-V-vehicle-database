@@ -68,7 +68,7 @@ function Home() {
     return (
         <>
             <div className={"row"}>
-                <div className="col-sm-12 col-md-3">
+                <div className="col-sm-12 col-md-4 col-lg-3">
                     <div className={'mb-3'}>
                         <SearchQueryInput placeholderText={'Search'} onChange={searchQueryOnChange}/>
                     </div>
@@ -82,7 +82,7 @@ function Home() {
                         <WebsiteSelect onChange={arrayVariableOnChange} selectName={'Select a website'}/>
                     </div>
                 </div>
-                <div className="col-sm-12 col-md-9">
+                <div className="col-sm-12 col-md-8 col-lg-9">
                     {isLoading ? (
                         <div className="text-center">
                             <LoadingSpinner className={'my-10'}/>
