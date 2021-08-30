@@ -1,0 +1,60 @@
+:root { --flip-card-time: 0.707s; }
+
+.flip-cards {
+    display: grid;
+    grid-column-gap: 1.5rem;
+    grid-row-gap: 1rem;
+    grid-auto-rows: 1fr;
+    grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+}
+
+.flip-card {
+    display: flex;
+    flex-direction: column;
+    perspective: 40rem;
+    transition: z-index, transform calc(var(--flip-card-time) / 4);
+    transition-delay: var(--time), 0s;
+    text-decoration: none;
+    color: inherit;
+    z-index: 0;
+
+    &:hover {
+        transition-delay: 0s;
+        z-index: 1;
+    }
+
+    &:active {
+        transform: scale(0.975);
+    }
+}
+
+.flip-card-body {
+    display: flex;
+    transform-style: preserve-3d;
+    transition: var(--flip-card-time) transform;
+    border-radius: 0.25rem;
+    flex: 0 1;
+
+    .flip-card:hover &, .flip-card:focus & {
+        transform: rotateX(-180deg);
+    }
+}
+
+.flip-card-front, .flip-card-back {
+    @include box-shadow();
+
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
+    border-radius: 0.25rem;
+    backface-visibility: hidden;
+    min-width: 100%;
+}
+
+.flip-card-back {
+    transform: rotateX(-180deg) translate(-100%, 0);
+}
+
+.flip-card-content {
+    margin-top: 0.5rem;
+}

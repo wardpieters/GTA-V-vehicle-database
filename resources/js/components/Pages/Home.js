@@ -5,6 +5,7 @@ import GameUpdateSelect from "../GameUpdateSelect";
 import WebsiteSelect from "../WebsiteSelect";
 import {Link} from "react-router-dom";
 import LoadingSpinner from "../LoadingSpinner";
+import ErrorBoundary from "../ErrorBoundary";
 
 function Home() {
     const [searchQuery, setSearchQuery] = useState({query: '', game_update: [], vehicle_type: [], website: []});
@@ -58,6 +59,10 @@ function Home() {
         setSearchQuery({...searchQuery, query: value});
     }
 
+    function roundNumber(number) {
+        return Math.round((number + Number.EPSILON) * 100) / 100
+    }
+
     return (
         <>
             <div className={"row"}>
@@ -83,37 +88,88 @@ function Home() {
                     ) : (
                         <>
                             {vehicles.length > 0 ? (
-                                <div className="row">
+                                <>
                                     {vehicles.length === 100 && (
-                                        <div className="col-12 mb-1">Search results limited to 100 results, please
-                                            refine your search query.</div>
+                                        <p>Search results limited to 100 results, please refine your search query.</p>
                                     )}
-                                    {vehicles.map((vehicle, key) => (
-                                        <div className={'col-xs-12 col-sm-6 col-md-4 col-xl-3'} key={key}>
-                                            <img loading="lazy" className={'img-fluid'} src={vehicle.image_url} alt={vehicle.name}/>
-                                            <Link className={'text-decoration-none'} to={`/vehicle/${vehicle.slug}`}>
-                                                <h4 className={'text-black mt-1 mb-0'}>
-                                                    {vehicle.name}
-                                                </h4>
-                                            </Link>
-                                            {vehicle.type?.name && (
-                                                <p className="text-muted mb-1">{vehicle.type?.name}</p>
-                                            )}
-                                            {vehicle.websites.length > 0 ? (
-                                                <div>
-                                                    <p className={'mb-1'}>{new Intl.NumberFormat('nl-NL', {
-                                                        style: 'currency',
-                                                        currency: 'USD'
-                                                    }).format(vehicle.cost)}</p>
-                                                    <p className="text-muted mb-0">Available at:</p>
-                                                    {vehicle.websites?.map((website) => (
-                                                        <p className={'mb-1'} key={website.id}>{website.name}</p>
-                                                    ))}
+                                    <div className="flip-cards">
+                                        <ErrorBoundary>
+                                            {vehicles.map((vehicle, key) => (
+                                                <div className={'flip-card'} key={key}>
+                                                    <div className="flip-card-body">
+                                                        <div className="flip-card-front">
+                                                            <div>
+                                                                <img loading="lazy" className={'img-fluid'} src={vehicle.image_url} alt={vehicle.name}/>
+                                                            </div>
+                                                        </div>
+                                                        <div className="flip-card-back bg-dark text-white">
+                                                            <div className="p-2 w-100">
+                                                                <div>
+                                                                    <p className="mb-0 text-uppercase">Speed</p>
+                                                                    <div className="progress">
+                                                                        <div className="progress-bar" role="progressbar"
+                                                                             style={{width: `${roundNumber(vehicle.speed)}%`}} aria-valuenow={roundNumber(vehicle.speed)}
+                                                                             aria-valuemin="0" aria-valuemax="100">{roundNumber(vehicle.speed)}%
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div>
+                                                                    <p className="mb-0 text-uppercase">Acceleration</p>
+                                                                    <div className="progress">
+                                                                        <div className="progress-bar" role="progressbar"
+                                                                             style={{width: `${roundNumber(vehicle.acceleration)}%`}} aria-valuenow={roundNumber(vehicle.acceleration)}
+                                                                             aria-valuemin="0" aria-valuemax="100">{roundNumber(vehicle.acceleration)}%
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div>
+                                                                    <p className="mb-0 text-uppercase">Braking</p>
+                                                                    <div className="progress">
+                                                                        <div className="progress-bar" role="progressbar"
+                                                                             style={{width: `${roundNumber(vehicle.braking)}%`}} aria-valuenow={roundNumber(vehicle.braking)}
+                                                                             aria-valuemin="0" aria-valuemax="100">{roundNumber(vehicle.braking)}%
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div>
+                                                                    <p className="mb-0 text-uppercase">Traction</p>
+                                                                    <div className="progress">
+                                                                        <div className="progress-bar" role="progressbar"
+                                                                             style={{width: `${roundNumber(vehicle.handling)}%`}} aria-valuenow={roundNumber(vehicle.handling)}
+                                                                             aria-valuemin="0" aria-valuemax="100">{roundNumber(vehicle.handling)}%
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div className="flip-card-content">
+                                                        <Link className={'text-decoration-none'} to={`/vehicle/${vehicle.slug}`}>
+                                                            <h4 className={'text-black mt-1 mb-0'}>
+                                                                {vehicle.name}
+                                                            </h4>
+                                                        </Link>
+                                                        {vehicle.type?.name && (
+                                                            <p className="text-muted mb-1">{vehicle.type?.name}</p>
+                                                        )}
+                                                        {vehicle.websites.length > 0 ? (
+                                                            <div>
+                                                                <p className={'mb-1'}>{new Intl.NumberFormat('nl-NL', {
+                                                                    style: 'currency',
+                                                                    currency: 'USD'
+                                                                }).format(vehicle.cost)}</p>
+                                                                <p className="text-muted mb-0">Available at:</p>
+                                                                {vehicle.websites?.map((website) => (
+                                                                    <p className={'mb-1'} key={website.id}>{website.name}</p>
+                                                                ))}
+                                                            </div>
+                                                        ) : <p className="text-muted mb-0">Not available for purchase</p>}
+                                                    </div>
                                                 </div>
-                                            ) : <p className="text-muted mb-0">Not available for purchase</p>}
-                                        </div>
-                                    ))}
-                                </div>
+                                            ))}
+                                        </ErrorBoundary>
+                                    </div>
+                                </>
                             ) : (
                                 <div>No results</div>
                             )}
