@@ -17,7 +17,10 @@
     text-decoration: none;
     color: inherit;
     z-index: 0;
-    max-width: 20rem;
+
+    @include media-breakpoint-up(sm) {
+        max-width: 20rem;
+    }
 
     &:hover {
         transition-delay: 0s;
