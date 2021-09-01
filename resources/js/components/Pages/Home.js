@@ -44,8 +44,12 @@ function Home() {
     }
 
     useEffect(() => {
+        setCurrentPage(0)
+    }, [debouncedSearchQuery]);
+
+    useEffect(() => {
         updateData()
-    }, [debouncedSearchQuery, currentPage]);
+    }, [currentPage]);
 
     function arrayVariableOnChange(variable, id, value) {
         setSearchQuery({
@@ -204,6 +208,7 @@ function Home() {
                             onPageChange={handlePageClick}
                             activeClassName={'active'}
                             initialPage={0}
+                            forcePage={currentPage}
                             pageClassName={"page-item"}
                             containerClassName={"pagination"}
                             pageLinkClassName={"page-link"}
