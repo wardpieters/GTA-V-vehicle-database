@@ -47,10 +47,6 @@ class VehicleController extends Controller
             ->orderBy('name')
             ->paginate(40);
 
-        if ($vehicles->count() == 0) {
-            return response()->json(['data' => [], 'error' => ['message' => "No results were found."]]);
-        }
-
         return VehicleResource::collection($vehicles)->response()->getData(true);
     }
 

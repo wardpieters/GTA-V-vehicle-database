@@ -101,10 +101,6 @@ function Home() {
                             {vehicleData.data?.length > 0 ? (
                                 <div>
                                     <ErrorBoundary>
-                                        {vehicleData.data?.length === 100 && (
-                                            <p>Search results limited to 100 results, please refine your search
-                                                query.</p>
-                                        )}
                                         <div className="flip-cards">
                                             {vehicleData.data?.map((vehicle, key) => (
                                                 <div className={'flip-card'} key={key}>
