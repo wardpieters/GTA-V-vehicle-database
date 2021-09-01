@@ -45,13 +45,13 @@ class VehicleController extends Controller
             })
             ->limit(100)
             ->orderBy('name')
-            ->get();
+            ->paginate(40);
 
         if ($vehicles->count() == 0) {
             return response()->json(['data' => [], 'error' => ['message' => "No results were found."]]);
         }
 
-        return VehicleResource::collection($vehicles);
+        return VehicleResource::collection($vehicles)->response()->getData(true);
     }
 
     /**
