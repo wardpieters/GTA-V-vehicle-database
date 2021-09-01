@@ -44,7 +44,9 @@ function Home() {
     }
 
     useEffect(() => {
+        let oldPage = currentPage
         setCurrentPage(0)
+        if (oldPage === 0) updateData()
     }, [debouncedSearchQuery]);
 
     useEffect(() => {
