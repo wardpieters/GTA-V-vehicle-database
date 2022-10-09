@@ -125,7 +125,7 @@ class VehiclesSeeder extends Seeder
                     }
 
                     // Download image if vehicle was just created.
-                    if ($new_vehicle && $new_vehicle->wasRecentlyCreated) {
+                    if (($new_vehicle && $new_vehicle->wasRecentlyCreated) || $new_vehicle->image_path === "no-img.png") {
                         $i++;
                         $vehicleImage = $this->saveVehicleImage($cdn_client, $new_vehicle);
                         $new_vehicle->update(['image_path' => empty($vehicleImage) ? "no-img.png" : $vehicleImage]);
