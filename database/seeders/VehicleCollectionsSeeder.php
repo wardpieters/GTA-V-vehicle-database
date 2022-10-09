@@ -21,21 +21,24 @@ class VehicleCollectionsSeeder extends Seeder
         // https://socialclub.rockstargames.com/gtav/VehiclesAjax
         $response = Http::get('https://socialclub.rockstargames.com/gtav/VehiclesAjax');
 
-        if($response->ok()) {
-            $body = $response->body();
-            $regex = Regex::match('/settings.VehiclesJson = (.*);/', $body);
+        if(!$response->ok()) {
+            $this->command->error("API connection error\n");
+            return;
+        }
 
-            if ($regex->hasMatch()) {
-                $match = json_decode($regex->group(1), true);
-                foreach ($match['VehicleCollections'] as $collection) {
-                    VehicleCollection::updateOrCreate([
-                        'slug' => $collection['Url'],
-                    ], [
-                        'name' => $collection['Name'],
-                        'created_at' => now(),
-                        'updated_at' => now(),
-                    ]);
-                }
+        $body = $response->body();
+        $regex = Regex::match('/VehiclesJson": {(.*)}/', $body);
+
+        if ($regex->hasMatch()) {
+            $match = json_decode("{" . $regex->group(1) . "}", true);
+            foreach ($match['VehicleCollections'] as $collection) {
+                VehicleCollection::updateOrCreate([
+                    'slug' => $collection['Url'],
+                ], [
+                    'name' => $collection['Name'],
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
             }
         }
     }

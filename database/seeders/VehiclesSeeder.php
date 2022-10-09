@@ -42,14 +42,14 @@ class VehiclesSeeder extends Seeder
             }
 
             $body = $response->body();
-            $regex = Regex::match('/settings.VehiclesJson = (.*);/', $body);
+            $regex = Regex::match('/VehiclesJson": {(.*)}/', $body);
 
             if (!$regex->hasMatch()) {
                 $this->command->error("API data error\n");
                 return;
             }
 
-            $match = json_decode($regex->group(1), true);
+            $match = json_decode("{" . $regex->group(1) . "}", true);
             foreach ($match['VehicleCollections'] as $vehicle_collection) {
                 if ($vehicle_collection['Url'] !== $collection['slug']) continue;
 
@@ -128,7 +128,7 @@ class VehiclesSeeder extends Seeder
                     if ($new_vehicle && $new_vehicle->wasRecentlyCreated) {
                         $i++;
                         $vehicleImage = $this->saveVehicleImage($cdn_client, $new_vehicle);
-                        $new_vehicle->update(['image_path' => $vehicleImage ?? "no-img.png"]);
+                        $new_vehicle->update(['image_path' => empty($vehicleImage) ? "no-img.png" : $vehicleImage]);
                     }
                 }
 
